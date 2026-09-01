@@ -47,8 +47,11 @@ object DragonFeatures {
     private val dragonNamesAsRegex = dragonNames.joinToString("|")
     private val dragonNamesAsRegexUppercase = dragonNames.joinToString("|") { it.uppercase() }
 
-    private val protectorRepoGroup = RepoPattern.group("combat.boss.protector.1")
-    private val repoGroup = RepoPattern.group("combat.boss.dragon.1")
+    // Group versions bumped from .1 to .2 because Hypixel changed the message formats (see the
+    // patterns below). The old keys are overridden by the remote repo with the now-stale regexes,
+    // so a new key namespace is required for these local fixes to actually take effect.
+    private val protectorRepoGroup = RepoPattern.group("combat.boss.protector.2")
+    private val repoGroup = RepoPattern.group("combat.boss.dragon.2")
     private val chatGroup = repoGroup.group("chat")
     private val scoreBoardGroup = repoGroup.group("scoreboard")
     private val tabListGroup = repoGroup.group("tablist-nocolor")
@@ -74,41 +77,44 @@ object DragonFeatures {
     private val eggSpawnedPattern by chatGroup.pattern("egg.spawn", "§5☬ §r§dThe Dragon Egg has spawned!")
 
     /**
-     * REGEX-TEST: §f                      §r§6§lPROTECTOR DRAGON DOWN!
+     * WRAPPED-REGEX-TEST: "                          §r§6§lPROTECTOR DRAGON DOWN!"
+     * WRAPPED-REGEX-TEST: "                          §r§6§lYOUNG DRAGON DOWN!"
+     * WRAPPED-REGEX-TEST: "                         §r§6§lSTRONG DRAGON DOWN!"
      */
     private val endStartLineDragonPattern by chatGroup.pattern(
         "end.boss",
-        "§f +§r§6§l(?<dragon>$dragonNamesAsRegexUppercase) DRAGON DOWN!",
+        "\\s+§r§6§l(?<dragon>$dragonNamesAsRegexUppercase) DRAGON DOWN!",
     )
 
     /**
-     * REGEX-TEST: §f                    §r§6§lENDSTONE PROTECTOR DOWN!
+     * WRAPPED-REGEX-TEST: "                    §r§6§lEND STONE PROTECTOR DOWN!"
      */
     private val endStartLineProtectorPattern by protectorRepoGroup.pattern(
         "chat.end.boss",
-        "§f +§r§6§lENDSTONE PROTECTOR DOWN!",
+        "\\s+§r§6§lEND ?STONE PROTECTOR DOWN!",
     )
 
     /**
-     * REGEX-TEST: §f                   §r§eYour Damage: §r§a88,966 §r§7(Position #5)
-     * REGEX-TEST: §f                 §r§eYour Damage: §r§a3,198,068 §r§7(Position #1)
+     * WRAPPED-REGEX-TEST: "                      §r§eYour Damage: §r§a0 §r§7(Position #24)"
+     * WRAPPED-REGEX-TEST: "                 §r§eYour Damage: §r§a5,057,018 §r§7(Position #1)"
+     * WRAPPED-REGEX-TEST: "                 §r§eYour Damage: §r§a3,497,468 §r§7(Position #1)"
      */
     @Suppress("MaxLineLength")
     private val endPositionPattern by chatGroup.pattern(
         "end.position",
-        "§f +§r§eYour Damage: §r§a(?<damage>[\\d.,]+) (?:§r§d§l\\(NEW RECORD!\\) )?§r§7\\(Position #(?<position>\\d+)\\)",
+        "\\s+§r§eYour Damage: §r§a(?<damage>[\\d.,]+) (?:§r§d§l\\(NEW RECORD!\\) )?§r§7\\(Position #(?<position>\\d+)\\)",
     )
 
     /**
-     * REGEX-TEST: §f             §r§e§l1st Damager §r§7- §r§a[VIP] Jarre07§r§f §r§7- §r§e9,659,033
-     * REGEX-TEST: §f          §r§6§l2nd Damager §r§7- §r§b[MVP§r§9+§r§b] FlamingZoom§r§f §r§7- §r§e1,459,691
-     * REGEX-TEST: §f          §r§c§l3rd Damager §r§7- §r§b[MVP§r§f+§r§b] Dustbringer§r§f §r§7- §r§e1,091,163
-     * REGEX-TEST: §f              §r§e§l1st Damager §r§7- §r§a[VIP] filip_zd§r§f §r§7- §r§e3,965,533
+     * WRAPPED-REGEX-TEST: "             §r§e§l1st Damager §r§7- §r§b[MVP§r§c+§r§b] hordiniii§r§f §r§7- §r§e5,057,018"
+     * WRAPPED-REGEX-TEST: "          §r§6§l2nd Damager §r§7- §r§7Andromeda126785§r§7 §r§7- §r§e3,372,454"
+     * WRAPPED-REGEX-TEST: "          §r§6§l2nd Damager §r§7- §r§a[VIP§r§6+§r§a] Opaksht_7x§r§f §r§7- §r§e5,715,877"
+     * WRAPPED-REGEX-TEST: "             §r§c§l3rd Damager §r§7- §r§b[MVP§r§c+§r§b] AvitasG§r§f §r§7- §r§e1,975,795"
      */
     @Suppress("MaxLineLength")
     private val endLeaderboardPattern by chatGroup.pattern(
         "end.place",
-        "§f +§r§.§l(?<position>\\d+).. Damager §r§7- §r§.(?:\\[[^ ]+\\] )?(?<name>.*)§r§. §r§7- §r§e(?<damage>[\\d.,]+)",
+        "\\s+§r§.§l(?<position>\\d+).. Damager §r§7- §r§.(?:\\[[^ ]+\\] )?(?<name>.*)§r§. §r§7- §r§e(?<damage>[\\d.,]+)",
     )
 
     /**
@@ -139,14 +145,17 @@ object DragonFeatures {
     private val scoreDragonPattern by scoreBoardGroup.pattern("dragon", "Dragon HP: .*")
 
     /**
-     * WRAPPED-REGEX-TEST: " JamBeastie: 7.4M"
-     * WRAPPED-REGEX-TEST: " 42069HzMonitor: 3M"
-     * WRAPPED-REGEX-TEST: " ItsJxxxxx2001: 457k"
-     * WRAPPED-REGEX-TEST: " Thunderblade73: 12.3k"
+     * Hypixel sends a plain ❤ (U+2764) here, not the private-use icon that this pattern
+     * used to expect. Both are accepted so either format keeps working.
+     *
+     * WRAPPED-REGEX-TEST: " hordiniii: 3.6M❤"
+     * WRAPPED-REGEX-TEST: " Andromeda126785: 816.9k❤"
+     * WRAPPED-REGEX-TEST: " Paulinkaxcv: 17k❤"
+     * WRAPPED-REGEX-TEST: " AvitasG: 188.1k❤"
      */
-    private val tabDamagePattern by tabListGroup.pattern(
+    internal val tabDamagePattern by tabListGroup.pattern(
         "fight.player",
-        "\\s(?<name>.+): (?<damage>[\\d.]+[kM]?)${SkyblockStat.HEALTH.hypixelIcon}",
+        "\\s(?<name>.+): (?<damage>[\\d.]+[kMB]?)[❤${SkyblockStat.HEALTH.hypixelIcon}].*",
     )
 
     private var yourEyes = 0
@@ -204,9 +213,9 @@ object DragonFeatures {
 
     private fun getWeightForPlacement(place: Int) = when (place) {
         -1 -> 10
-        1 -> 200
-        2 -> 175
-        3 -> 150
+        1 -> 300
+        2 -> 250
+        3 -> 200
         4 -> 125
         5 -> 110
         6, 7, 8 -> 100
@@ -217,18 +226,17 @@ object DragonFeatures {
 
     private fun calculateDragonWeight(eyes: Int, place: Int, firstDamage: Double, yourDamage: Double) =
         getWeightForPlacement(
-            if (yourDamage == 0.0) -1 else place,
-        ) + 100 * (
-            eyes + yourDamage / (firstDamage.takeIf { it != 0.0 } ?: 1.0)
-            )
+            if (yourDamage == 0.0) -1 else place,) + 100 * (
+            eyes) + 100* (yourDamage / (firstDamage.takeIf { it != 0.0 } ?: 1.0))
 
+/*
     private fun calculateProtectorWeight(zealots: Int, place: Int, firstDamage: Double, yourDamage: Double) =
         getWeightForPlacement(
             if (yourDamage == 0.0) -1 else place,
         ) + 50 * (
             yourDamage / (firstDamage.takeIf { it != 0.0 } ?: 1.0)
             ) + if (zealots > 100) 100 else zealots
-
+*/
     private fun displayIsEnabled() = config.display && dragonSpawned
 
     @HandleEvent(onlyOnIsland = IslandType.THE_END)
@@ -247,6 +255,7 @@ object DragonFeatures {
         if (handleEndLeaderboard(message)) return
         if (handleEndPosition(message)) return
         if (handleZealots(message)) return
+
     }
 
     private fun handleDragonSpawn(message: String): Boolean {
@@ -361,7 +370,7 @@ object DragonFeatures {
             group("amount").toInt()
         } ?: return false
 
-        val weight = calculateProtectorWeight(zealots, endPlace, endTopDamage, endDamage)
+    //    val weight = calculateProtectorWeight(zealots, endPlace, endTopDamage, endDamage)
 
         printWeight(weight)
         resetEnd()
@@ -402,8 +411,8 @@ object DragonFeatures {
         if (!event.isWidget(TabWidget.DRAGON)) return
         if (!displayIsEnabled()) return
         widgetActive = true
-        for (i in 1 until event.lines.size) {
-            tabDamagePattern.matchMatcher(event.lines[i]) {
+        for (i in 1 until event.cleanLines.size) {
+            tabDamagePattern.matchMatcher(event.cleanLines[i]) {
                 if (i == 1) {
                     currentTopDamage = group("damage").formatDouble()
                 }

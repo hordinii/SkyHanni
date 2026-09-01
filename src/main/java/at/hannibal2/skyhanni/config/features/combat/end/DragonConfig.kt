@@ -28,11 +28,25 @@ class DragonConfig {
     )
     @ConfigEditorBoolean
     @FeatureToggle
-    var display: Boolean = false
+    var display: Boolean = true
 
     @Expose
     @ConfigLink(owner = DragonConfig::class, field = "display")
     val displayPosition: Position = Position(120, 40)
+
+    @Expose
+    @ConfigOption(
+        name = "Damage List HUD",
+        desc = "Shows a list of all damage sources and their damage during the dragon fight." +
+            " The dragon widget needs to be enabled for this to work."
+    )
+    @ConfigEditorBoolean
+    @FeatureToggle
+    var damageList: Boolean = true
+
+    @Expose
+    @ConfigLink(owner = DragonConfig::class, field = "damageList")
+    val damageListPosition: Position = Position(120, 150)
 
     @Expose
     @ConfigOption(name = "Weight Message", desc = "Shows your dragon weight in chat after the dragon died.")
