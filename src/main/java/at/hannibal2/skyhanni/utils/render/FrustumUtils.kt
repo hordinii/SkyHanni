@@ -8,7 +8,7 @@ import net.minecraft.world.phys.AABB
 object FrustumUtils {
 
     //~ if < 26.2 'mainCamera()' -> 'mainCamera'
-    private val frustum get() = Minecraft.getInstance().gameRenderer.mainCamera().getCullFrustum()
+    private val frustum get() = Minecraft.getInstance().gameRenderer.mainCamera.getCullFrustum()
 
     fun isVisible(box: AABB): Boolean = frustum.isVisible(box)
 }

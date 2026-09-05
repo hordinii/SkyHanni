@@ -9,10 +9,10 @@ import net.minecraft.client.renderer.RenderPipelines
 import java.util.OptionalDouble
 
 //? if >= 26.2 {
-import java.util.Optional
-//?} else {
-/*import java.util.OptionalInt
-*///?}
+/*import java.util.Optional
+*///?} else {
+import java.util.OptionalInt
+//?}
 
 object RenderCompat {
 
@@ -21,7 +21,7 @@ object RenderCompat {
      * so "nothing drawn" is 0 rather than 1.
      */
     //~ if < 26.2 '0.0' -> '1.0'
-    const val CLEAR_DEPTH = 0.0
+    const val CLEAR_DEPTH = 1.0
 
     fun getMinecraftGuiTextured(): RenderPipeline = RenderPipelines.GUI_TEXTURED
 
@@ -39,7 +39,7 @@ object RenderCompat {
             indices,
             1,
             //? if >= 26.2
-            0,
+            //0,
         )
     }
 
@@ -53,7 +53,7 @@ object RenderCompat {
             { name },
             colorAttachment,
             //~ if < 26.2 'Optional' -> 'OptionalInt'
-            Optional.empty(),
+            OptionalInt.empty(),
             framebuffer.findDepthAttachment(),
             OptionalDouble.empty(),
         )

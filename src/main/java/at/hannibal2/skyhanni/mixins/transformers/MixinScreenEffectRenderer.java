@@ -9,28 +9,28 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 //? if >= 26.2 {
-import net.minecraft.client.renderer.SubmitNodeCollector;
-//?} else {
-/*import net.minecraft.client.renderer.MultiBufferSource;
-*///?}
+/*import net.minecraft.client.renderer.SubmitNodeCollector;
+*///?} else {
+import net.minecraft.client.renderer.MultiBufferSource;
+//?}
 
 @Mixin(ScreenEffectRenderer.class)
 public abstract class MixinScreenEffectRenderer {
 
     //~ if < 26.2 'submitFire' -> 'renderFire'
-    @Inject(method = "submitFire", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "renderFire", at = @At("HEAD"), cancellable = true)
     private static void renderFire(CallbackInfo ci) {
         if (new BlockOverlayRenderEvent(OverlayType.FIRE).post().isCancelled()) ci.cancel();
     }
 
     //~ if < 26.2 'submitWater' -> 'renderWater'
-    @Inject(method = "submitWater", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "renderWater", at = @At("HEAD"), cancellable = true)
     private static void renderWater(CallbackInfo ci) {
         if (new BlockOverlayRenderEvent(OverlayType.WATER).post().isCancelled()) ci.cancel();
     }
 
     //~ if < 26.2 'submitBlockSprite' -> 'renderTex'
-    @Inject(method = "submitBlockSprite", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "renderTex", at = @At("HEAD"), cancellable = true)
     private static void renderBlock(CallbackInfo ci) {
         if (new BlockOverlayRenderEvent(OverlayType.BLOCK).post().isCancelled()) ci.cancel();
     }

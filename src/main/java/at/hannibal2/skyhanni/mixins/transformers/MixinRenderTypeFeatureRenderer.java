@@ -1,7 +1,7 @@
 package at.hannibal2.skyhanni.mixins.transformers;
 
 //? if >= 26.2 {
-import at.hannibal2.skyhanni.mixins.hooks.SkyHanniOutlineHook;
+/*import at.hannibal2.skyhanni.mixins.hooks.SkyHanniOutlineHook;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.renderer.StagedVertexBuffer;
@@ -28,4 +28,4 @@ public abstract class MixinRenderTypeFeatureRenderer {
         SkyHanniOutlineHook.wrapRendering(original, renderType, executeInfo);
     }
 }
-//?}
+*///?}

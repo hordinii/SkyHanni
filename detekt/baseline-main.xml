@@ -2484,7 +2484,6 @@
     <ID>PrivateEventListener:ProfileStorageData.kt:ProfileStorageData$@HandleEvent fun onWorldChange</ID>
     <ID>PrivateEventListener:ProfileStorageData.kt:ProfileStorageData$@HandleEvent(onlyOnSkyblock = true) fun onSecondPassed</ID>
     <ID>PrivateEventListener:ProfileStorageData.kt:ProfileStorageData$@HandleEvent(priority = HandleEvent.HIGHEST) fun onProfileJoin</ID>
-    <ID>PrivateEventListener:ProfitPerDragon.kt:ProfitPerDragon$@HandleEvent(onlyOnIsland = IslandType.THE_END) fun onTick</ID>
     <ID>PrivateEventListener:ProfitPerExcavation.kt:ProfitPerExcavation$@HandleEvent fun onFossilExcavation</ID>
     <ID>PrivateEventListener:ProfitPerMineshaftCorpse.kt:ProfitPerMineshaftCorpse$@HandleEvent fun onCorpseLooted</ID>
     <ID>PrivateEventListener:PunchcardHighlight.kt:PunchcardHighlight$@HandleEvent fun onCommandRegistration</ID>

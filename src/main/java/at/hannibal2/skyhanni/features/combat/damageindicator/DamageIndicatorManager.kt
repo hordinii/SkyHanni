@@ -18,7 +18,7 @@ import at.hannibal2.skyhanni.events.chat.SkyHanniChatEvent
 import at.hannibal2.skyhanni.events.entity.EntityEnterWorldEvent
 import at.hannibal2.skyhanni.events.entity.EntityHealthUpdateEvent
 import at.hannibal2.skyhanni.events.minecraft.SkyHanniRenderWorldEvent
-import at.hannibal2.skyhanni.features.combat.end.DragonFightAPI
+import at.hannibal2.skyhanni.features.combat.end.dragon.DragonFightAPI
 import at.hannibal2.skyhanni.features.dungeon.DungeonApi
 import at.hannibal2.skyhanni.features.rift.RiftApi
 import at.hannibal2.skyhanni.features.rift.area.colosseum.BacteApi
@@ -67,7 +67,7 @@ import net.minecraft.world.entity.Mob
 import net.minecraft.world.entity.animal.wolf.Wolf
 import net.minecraft.world.entity.decoration.ArmorStand
 import net.minecraft.world.entity.monster.EnderMan
-import net.minecraft.world.entity.monster.cubemob.MagmaCube
+import net.minecraft.world.entity.monster.MagmaCube
 import net.minecraft.world.entity.monster.zombie.Zombie
 import java.util.UUID
 import kotlin.math.max

@@ -11,23 +11,23 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 //? if >= 26.2 {
-import net.minecraft.client.renderer.feature.phase.SimpleFeatureRenderPhase;
+/*import net.minecraft.client.renderer.feature.phase.SimpleFeatureRenderPhase;
 import net.minecraft.client.renderer.feature.submit.SubmitNode;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Shadow;
-//?} else {
-/*import net.minecraft.client.renderer.SubmitNodeStorage;
+*///?} else {
+import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.feature.ModelPartFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import java.util.List;
-*///?}
+//?}
 
 @Mixin(SubmitNodeCollection.class)
 public abstract class MixinSubmitNodeCollection<E> {
 
     //? if >= 26.2 {
-    @Shadow
+    /*@Shadow
     @Final
     public SimpleFeatureRenderPhase outline;
 
@@ -48,8 +48,8 @@ public abstract class MixinSubmitNodeCollection<E> {
         }
         original.call(phase, submit);
     }
-    //?} else {
-    /*@WrapOperation(method = "submitItem", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"))
+    *///?} else {
+    @WrapOperation(method = "submitItem", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"))
     private boolean onSubmitItem(List<E> list, E itemCommand, Operation<Boolean> original) {
         skyhanni$markCustomOutline(itemCommand);
         return original.call(list, itemCommand);
@@ -88,7 +88,7 @@ public abstract class MixinSubmitNodeCollection<E> {
         skyhanni$markCustomOutline(modelPartSubmit);
         original.call(storage, renderType, modelPartSubmit);
     }
-    *///?}
+    //?}
 
     @Unique
     private void skyhanni$markCustomOutline(Object submit) {

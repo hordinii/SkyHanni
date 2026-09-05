@@ -33,7 +33,7 @@ import net.minecraft.world.entity.monster.Ghast
 import net.minecraft.world.entity.monster.Giant
 import net.minecraft.world.entity.monster.Guardian
 import net.minecraft.world.entity.monster.Silverfish
-import net.minecraft.world.entity.monster.cubemob.MagmaCube
+import net.minecraft.world.entity.monster.MagmaCube
 import net.minecraft.world.entity.monster.skeleton.AbstractSkeleton
 import net.minecraft.world.entity.monster.spider.Spider
 import net.minecraft.world.entity.monster.zombie.Zombie

@@ -42,11 +42,11 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 //? if >= 26.2 {
-import net.minecraft.util.FormattedCharSequence
-//?} else {
-/*import net.minecraft.client.renderer.MultiBufferSource
+/*import net.minecraft.util.FormattedCharSequence
+*///?} else {
+import net.minecraft.client.renderer.MultiBufferSource
 import org.joml.Matrix4f
-*///?}
+//?}
 
 @Suppress("LargeClass")
 object WorldRenderUtils {
@@ -54,9 +54,9 @@ object WorldRenderUtils {
     private val beaconBeam = createResourceLocation("textures/entity/beacon/beacon_beam.png")
 
     //? if >= 26.2 {
-    private const val SKYHANNI_TEXT_SUBMIT_ORDER = 10_000
-    //?} else {
-    /*// 26.1 composites entity render targets over the main target after the normal world-render hook.
+    /*private const val SKYHANNI_TEXT_SUBMIT_ORDER = 10_000
+    *///?} else {
+    // 26.1 composites entity render targets over the main target after the normal world-render hook.
     // Drawing see-through text in the late pass prevents entities from covering it (MC-265743).
     private val deferredSeeThroughText = mutableListOf<(MultiBufferSource.BufferSource) -> Unit>()
 
@@ -70,10 +70,10 @@ object WorldRenderUtils {
             deferredSeeThroughText.clear()
         }
     }
-    *///?}
+    //?}
 
     //? if >= 26.2 {
-    private fun SkyHanniRenderWorldEvent.submitOrderedText(
+    /*private fun SkyHanniRenderWorldEvent.submitOrderedText(
         x: Float,
         y: Float,
         text: FormattedCharSequence,
@@ -98,17 +98,17 @@ object WorldRenderUtils {
             outlineColor,
         )
     }
-    //?}
+    *///?}
 
     inline fun SkyHanniRenderWorldEvent.submitCustomGeometry(
         layer: RenderType,
         crossinline render: (VertexConsumer) -> Unit,
     ) {
         //? if >= 26.2 {
-        submitNodeStorage.submitCustomGeometry(matrices, layer) { _, buffer -> render(buffer) }
-        //?} else {
-        /*render(bufferSource.getBuffer(layer))
-        *///?}
+        /*submitNodeStorage.submitCustomGeometry(matrices, layer) { _, buffer -> render(buffer) }
+        *///?} else {
+        render(bufferSource.getBuffer(layer))
+        //?}
     }
 
     fun SkyHanniRenderWorldEvent.renderBeaconBeam(vec: LorenzVec, rgb: Int) {
@@ -130,7 +130,7 @@ object WorldRenderUtils {
         BeaconRenderer.submitBeaconBeam(
             matrices,
             //~ if < 26.2 'submitNodeStorage' -> 'Minecraft.getInstance().gameRenderer.featureRenderDispatcher.submitNodeStorage'
-            submitNodeStorage,
+            Minecraft.getInstance().gameRenderer.featureRenderDispatcher.submitNodeStorage,
             beaconBeam,
             1f,
             Math.floorMod(MinecraftCompat.clientTime, 40) + partialTicks,
@@ -318,7 +318,7 @@ object WorldRenderUtils {
         val x = -fr.width(text) / 2f
 
         //? if >= 26.2 {
-        matrices.pushPose()
+        /*matrices.pushPose()
         matrices.translate(
             (location.x - cameraPos.x()).toFloat(),
             (location.y - cameraPos.y()).toFloat(),
@@ -339,8 +339,8 @@ object WorldRenderUtils {
             0,
         )
         matrices.popPose()
-        //?} else {
-        /*val matrix = Matrix4f()
+        *///?} else {
+        val matrix = Matrix4f()
         matrix.translate(
             (location.x - cameraPos.x()).toFloat(),
             (location.y - cameraPos.y()).toFloat(),
@@ -379,7 +379,7 @@ object WorldRenderUtils {
             backgroundColor,
             FULL_BRIGHT,
         )
-        *///?}
+        //?}
     }
 
     fun SkyHanniRenderWorldEvent.drawCircleWireframe(entity: Entity, rad: Double, color: Color) {
@@ -935,7 +935,7 @@ object WorldRenderUtils {
     }
 
     //~ if < 26.2 'mainCamera()' -> 'mainCamera'
-    fun getViewerPos() = exactLocation(Minecraft.getInstance().gameRenderer.mainCamera())
+    fun getViewerPos() = exactLocation(Minecraft.getInstance().gameRenderer.mainCamera)
 
     fun AABB.expandBlock(n: Int = 1) = expand(LorenzVec.expandVector * n)
     fun AABB.inflateBlock(n: Int = 1) = expand(LorenzVec.expandVector * -n)
@@ -965,10 +965,10 @@ object WorldRenderUtils {
 
     internal fun SkyHanniRenderWorldEvent.exactPlayerCrosshairLocation(): LorenzVec {
         //? if >= 26.2 {
-        val look = Vector3f(0f, 0f, -1f).rotate(camera.rotation())
+        /*val look = Vector3f(0f, 0f, -1f).rotate(camera.rotation())
         return camera.position.toLorenzVec() + LorenzVec(look.x.toDouble(), look.y.toDouble(), look.z.toDouble()).times(2)
-        //?} else
-        //return exactPlayerEyeLocation() + MinecraftCompat.localPlayerOrThrow.lookAngle.toLorenzVec().times(2)
+        *///?} else
+        return exactPlayerEyeLocation() + MinecraftCompat.localPlayerOrThrow.lookAngle.toLorenzVec().times(2)
     }
 
     fun SkyHanniRenderWorldEvent.exactBoundingBox(entity: Entity): AABB {
@@ -1066,5 +1066,5 @@ object WorldRenderUtils {
      * Returns true if the camera is underwater.
      */
     //~ if < 26.2 'mainCamera()' -> 'mainCamera'
-    fun isRenderingUnderwater() = Minecraft.getInstance().gameRenderer.mainCamera().fluidInCamera == FogType.WATER
+    fun isRenderingUnderwater() = Minecraft.getInstance().gameRenderer.mainCamera.fluidInCamera == FogType.WATER
 }

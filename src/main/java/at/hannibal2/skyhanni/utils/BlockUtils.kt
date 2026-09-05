@@ -32,6 +32,18 @@ object BlockUtils {
         return this.ownerProfile?.partialProfile()?.id?.toString()
     }
 
+    /**
+     * The base64 skin value of a skull block, ready to be passed to
+     * [at.hannibal2.skyhanni.utils.ItemUtils.createSkull].
+     *
+     * Not to be confused with [getTextureFromSkull], which returns the profile id instead - the
+     * two are not interchangeable despite the similar names.
+     */
+    fun getSkullTextureValueAt(position: LorenzVec): String? {
+        val entity = world.getBlockEntity(position.toBlockPos()) as? SkullBlockEntity ?: return null
+        return entity.ownerProfile?.partialProfile()?.properties?.get("textures")?.firstOrNull()?.value
+    }
+
     fun BlockState.isBabyCrop(): Boolean {
         val property = (block.stateDefinition.properties.find { it.name == "age" } as? IntegerProperty) ?: return false
         return getValue(property) == 0

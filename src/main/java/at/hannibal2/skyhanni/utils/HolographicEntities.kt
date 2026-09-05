@@ -27,11 +27,11 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.isSuperclassOf
 
 //? if >= 26.2 {
-import net.minecraft.client.renderer.SubmitNodeStorage
+/*import net.minecraft.client.renderer.SubmitNodeStorage
 import net.minecraft.util.LightCoordsUtil
-//?} else {
-/*import net.minecraft.client.renderer.LevelRenderer
-*///?}
+*///?} else {
+import net.minecraft.client.renderer.LevelRenderer
+//?}
 
 /**
  * Utility for creating fake entities without an associated world to avoid contaminating the world state.
@@ -134,7 +134,7 @@ object HolographicEntities {
             val level = Minecraft.getInstance().level ?: return null
             val entity = entityType.create(level, EntitySpawnReason.COMMAND) ?: return null
             //? if >= 26.2
-            entity.id = FakeEntityIdProvider.getNextId()
+            //entity.id = FakeEntityIdProvider.getNextId()
             return HolographicEntity(entity, position, yaw)
         }
     }
@@ -147,7 +147,7 @@ object HolographicEntities {
             val testEntity: LivingEntity = runCatching {
                 entityType.create(level, EntitySpawnReason.COMMAND)?.apply {
                     //? if >= 26.2
-                    id = FakeEntityIdProvider.getNextId()
+                    //id = FakeEntityIdProvider.getNextId()
                 }
             }.getOrNull() as? LivingEntity ?: return@type null
             @Suppress("UNCHECKED_CAST")
@@ -194,16 +194,16 @@ object HolographicEntities {
         val entityRenderState = holographicEntity.cachedRenderState
             ?: renderer.createRenderState().also { holographicEntity.cachedRenderState = it }
         //~ if < 26.2 'gameRenderState()' -> 'gameRenderState'
-        val cameraRenderState = gameRenderer.gameRenderState().levelRenderState.cameraRenderState
+        val cameraRenderState = gameRenderer.gameRenderState.levelRenderState.cameraRenderState
         val cameraPos = cameraRenderState.pos
         //~ if < 26.2 'SubmitNodeStorage()' -> 'gameRenderer.featureRenderDispatcher.submitNodeStorage'
-        val submitNodeCollector = SubmitNodeStorage()
+        val submitNodeCollector = gameRenderer.featureRenderDispatcher.submitNodeStorage
         renderer.extractRenderState(entity, entityRenderState, partialTicks)
         entityRenderState.`skyhanni$setEntity`(entity)
         (entityRenderState as? LivingEntityRenderState)?.isBaby = holographicEntity.isChild
         client.level?.let { level ->
             //~ if < 26.2 'LightCoordsUtil' -> 'LevelRenderer'
-            entityRenderState.lightCoords = LightCoordsUtil.getLightCoords(level, mobPosition.toBlockPos())
+            entityRenderState.lightCoords = LevelRenderer.getLightCoords(level, mobPosition.toBlockPos())
         }
 
         activeHolographicEntities.add(entity)
@@ -219,7 +219,7 @@ object HolographicEntities {
                     submitNodeCollector,
                 )
                 //? if >= 26.2
-                gameRenderer.featureRenderDispatcher().renderAllFeatures(submitNodeCollector)
+                //gameRenderer.featureRenderDispatcher().renderAllFeatures(submitNodeCollector)
             }
         } finally {
             activeHolographicEntities.remove(entity)

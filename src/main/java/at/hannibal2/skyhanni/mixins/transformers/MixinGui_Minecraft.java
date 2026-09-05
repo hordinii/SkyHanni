@@ -8,17 +8,17 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 //? if >= 26.2 {
-import net.minecraft.client.gui.Gui;
-//?} else {
-/*import net.minecraft.client.Minecraft;
-*///?}
+/*import net.minecraft.client.gui.Gui;
+*///?} else {
+import net.minecraft.client.Minecraft;
+//?}
 
 //~ if < 26.2 'Gui' -> 'Minecraft'
-@Mixin(Gui.class)
+@Mixin(Minecraft.class)
 public abstract class MixinGui_Minecraft {
 
     //~ if < 26.2 'gui/Gui' -> 'Minecraft'
-    @Inject(method = "setScreen", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/Gui;screen:Lnet/minecraft/client/gui/screens/Screen;"))
+    @Inject(method = "setScreen", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;screen:Lnet/minecraft/client/gui/screens/Screen;"))
     private void onSetScreen(Screen screen, CallbackInfo ci) {
         new GuiScreenOpenEvent(screen).post();
     }

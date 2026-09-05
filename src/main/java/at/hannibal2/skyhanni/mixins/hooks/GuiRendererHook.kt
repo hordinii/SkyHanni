@@ -24,8 +24,8 @@ import net.minecraft.client.renderer.state.gui.GuiRenderState
 import net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState
 
 //? if < 26.2 {
-/*import net.minecraft.client.renderer.MultiBufferSource
-*///?}
+import net.minecraft.client.renderer.MultiBufferSource
+//?}
 
 object GuiRendererHook {
     private val chromaUniform = SkyHanniChromaUniform()
@@ -54,7 +54,7 @@ object GuiRendererHook {
     fun clearChromaUniforms() {
         chromaUniform.clear()
         //? if >= 26.2
-        chromaBufferSlice = null
+        //chromaBufferSlice = null
     }
 
     // This 'should' be fine being injected into GuiRenderer's render pass since if the bound pipeline's shader doesn't
@@ -98,7 +98,7 @@ object GuiRendererHook {
     fun preRenderAtlas(
         pictureInPictureRenderers: Map<Class<out PictureInPictureRenderState>, PictureInPictureRenderer<*>>,
         //? if < 26.2
-        //bufferSource: MultiBufferSource.BufferSource,
+        bufferSource: MultiBufferSource.BufferSource,
         featureRenderDispatcher: FeatureRenderDispatcher,
         frameNumber: Int,
     ) {
@@ -112,7 +112,7 @@ object GuiRendererHook {
         SkyHanniItemRenderCoordinator.preRenderAtlas(
             states,
             //? if < 26.2
-            //bufferSource,
+            bufferSource,
             featureRenderDispatcher,
             frameNumber
         )

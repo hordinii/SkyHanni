@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.rendertype.RenderType
 
 //? if >= 26.2 {
-import at.hannibal2.skyhanni.SkyHanniMod
+/*import at.hannibal2.skyhanni.SkyHanniMod
 import at.hannibal2.skyhanni.utils.collection.CollectionUtils.equalsOneOf
 import com.mojang.blaze3d.GpuFormat
 import com.mojang.blaze3d.PrimitiveTopology
@@ -24,20 +24,20 @@ import net.minecraft.client.renderer.StagedVertexBuffer
 import net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer
 import net.minecraft.client.renderer.rendertype.PreparedRenderType
 import net.minecraft.resources.Identifier
-//?} else {
-/*import com.mojang.blaze3d.systems.RenderSystem
+*///?} else {
+import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.textures.GpuTexture
 import com.mojang.blaze3d.textures.GpuTextureView
 import com.mojang.blaze3d.textures.TextureFormat
 import net.minecraft.client.renderer.OutlineBufferSource
-*///?}
+//?}
 
 // The idea and implementation for this class was inspired by Skyblocker.
 // This implementation has been modified from the original Skyblocker code to work across multiple versions.
 object SkyHanniOutlineHook {
 
     //? if < 26.2 {
-    /*class SkyHanniOutlineVertexConsumerProvider : OutlineBufferSource() {
+    class SkyHanniOutlineVertexConsumerProvider : OutlineBufferSource() {
         override fun endOutlineBatch() {
             beginRendering()
             super.endOutlineBatch()
@@ -56,14 +56,14 @@ object SkyHanniOutlineHook {
     val vertexConsumers by lazy {
         SkyHanniOutlineVertexConsumerProvider()
     }
-    *///?}
+    //?}
 
     private var customDepthAttachment: GpuTexture? = null
 
     private var customDepthAttachmentView: GpuTextureView? = null
 
     //~ if < 26.2 'GpuFormat' -> 'TextureFormat'
-    private var customDepthAttachmentFormat: GpuFormat? = null
+    private var customDepthAttachmentFormat: TextureFormat? = null
 
     @JvmStatic
     var isCurrentlyActive = false
@@ -81,7 +81,7 @@ object SkyHanniOutlineHook {
     }
 
     //? if >= 26.2 {
-    @JvmStatic
+    /*@JvmStatic
     fun wrapRendering(
         // Required for Java interop with Operation<Void>
         @Suppress("ForbiddenVoid")
@@ -98,7 +98,7 @@ object SkyHanniOutlineHook {
             if (hasCustomOutline) finishRendering()
         }
     }
-    //?}
+    *///?}
 
     private var lastWidth = 0
     private var lastHeight = 0
@@ -106,7 +106,7 @@ object SkyHanniOutlineHook {
     @JvmStatic
     fun checkIfDepthAttachmentNeedsUpdating() {
         //~ if < 26.2 'gameRenderer.mainRenderTarget()' -> 'mainRenderTarget'
-        val gpuTexture = Minecraft.getInstance().gameRenderer.mainRenderTarget().depthTexture ?: return
+        val gpuTexture = Minecraft.getInstance().mainRenderTarget.depthTexture ?: return
         val width = gpuTexture.getWidth(0)
         val height = gpuTexture.getHeight(0)
         val format = gpuTexture.format
@@ -134,7 +134,7 @@ object SkyHanniOutlineHook {
     }
 
     //~ if < 26.2 'GpuFormat' -> 'TextureFormat'
-    private fun updateDepthAttachment(format: GpuFormat) {
+    private fun updateDepthAttachment(format: TextureFormat) {
         try {
             customDepthAttachment?.let {
                 it.close()
@@ -155,7 +155,7 @@ object SkyHanniOutlineHook {
     }
 
     //? if >= 26.2 {
-    private val customOutlineCullPipeline: RenderPipeline = createCustomOutlinePipeline("custom_outline_cull", true)
+    /*private val customOutlineCullPipeline: RenderPipeline = createCustomOutlinePipeline("custom_outline_cull", true)
 
     private val customOutlineNoCullPipeline: RenderPipeline = createCustomOutlinePipeline("custom_outline_no_cull", false)
 
@@ -175,7 +175,7 @@ object SkyHanniOutlineHook {
     fun wrapCustomOutlineBuild(
         original: Operation<VertexConsumer>,
         //~ if < 26.2 'RenderTypeFeatureRenderer<*>' -> 'OutlineBufferSource'
-        instance: RenderTypeFeatureRenderer<*>,
+        instance: OutlineBufferSource,
         renderType: RenderType,
     ): VertexConsumer {
         customOutlineBuildDepth++
@@ -197,9 +197,9 @@ object SkyHanniOutlineHook {
     }
 
     //? if >= 26.2 {
-    private val RenderPipeline.isCustomOutlinePipeline: Boolean get() =
+    /*private val RenderPipeline.isCustomOutlinePipeline: Boolean get() =
         equalsOneOf(customOutlineCullPipeline, customOutlineNoCullPipeline)
-    //?}
+    *///?}
 
     @JvmStatic
     fun ensureCustomOutlinePipelinesRegistered() {
@@ -219,9 +219,9 @@ object SkyHanniOutlineHook {
                 .withVertexBinding(0, DefaultVertexFormat.POSITION_TEX_COLOR)
                 .withPrimitiveTopology(PrimitiveTopology.QUADS)
                 //~ if < 26.2 'GREATER_THAN_OR_EQUAL' -> 'LESS_THAN_OR_EQUAL'
-                .withDepthStencilState(DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, false))
+                .withDepthStencilState(DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
                 .withCull(cull)
                 .build(),
         )
-    //?}
+    *///?}
 }

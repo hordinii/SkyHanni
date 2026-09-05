@@ -12,10 +12,10 @@ import net.minecraft.world.phys.Vec3
 import kotlin.math.abs
 
 //? if >= 26.2 {
-import net.minecraft.client.renderer.SubmitNodeStorage
-//?} else {
-/*import net.minecraft.client.renderer.MultiBufferSource.BufferSource
-*///?}
+/*import net.minecraft.client.renderer.SubmitNodeStorage
+*///?} else {
+import net.minecraft.client.renderer.MultiBufferSource.BufferSource
+//?}
 
 @SkyHanniModule
 internal object SkyHanniItemRenderCoordinator {
@@ -30,7 +30,7 @@ internal object SkyHanniItemRenderCoordinator {
 
     private data class FrameRenderResources(
         //~ if < 26.2 'submitNodeStorage: SubmitNodeStorage' -> 'bufferSource: BufferSource'
-        val submitNodeStorage: SubmitNodeStorage,
+        val bufferSource: BufferSource,
         val featureRenderDispatcher: FeatureRenderDispatcher,
         val guiScale: Int,
     )
@@ -65,7 +65,7 @@ internal object SkyHanniItemRenderCoordinator {
     fun preRenderAtlas(
         pipStates: List<SkyHanniGuiItemRenderState>,
         //? if < 26.2
-        //bufferSource: BufferSource,
+        bufferSource: BufferSource,
         featureRenderDispatcher: FeatureRenderDispatcher,
         frameNumber: Int,
     ) {
@@ -74,7 +74,7 @@ internal object SkyHanniItemRenderCoordinator {
 
         val guiScale = Minecraft.getInstance().window.guiScale
         //~ if < 26.2 'SubmitNodeStorage()' -> 'bufferSource'
-        frameResources = FrameRenderResources(SubmitNodeStorage(), featureRenderDispatcher, guiScale)
+        frameResources = FrameRenderResources(bufferSource, featureRenderDispatcher, guiScale)
         val atlasStates = ArrayList<SkyHanniGuiItemRenderState>(pipStates.size)
 
         for (state in pipStates) {
@@ -97,7 +97,7 @@ internal object SkyHanniItemRenderCoordinator {
 
         val renderContext = SkyHanniItemRenderContext(
             //~ if < 26.2 'SubmitNodeStorage()' -> 'bufferSource'
-            atlasStates, SubmitNodeStorage(), featureRenderDispatcher, frameNumber, guiScale,
+            atlasStates, bufferSource, featureRenderDispatcher, frameNumber, guiScale,
         )
 
         with(atlas) { renderContext.setupAtlasRendering(frameNumber, projectionBuffer) }
@@ -133,7 +133,7 @@ internal object SkyHanniItemRenderCoordinator {
         val renderContext = SkyHanniItemRenderContext(
             atlasStates = emptyList(),
             //~ if < 26.2 'submitNodeStorage' -> 'bufferSource'
-            resources.submitNodeStorage,
+            resources.bufferSource,
             resources.featureRenderDispatcher,
             frameNumber,
             resources.guiScale,
