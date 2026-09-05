@@ -22,7 +22,7 @@ class DragonConfig {
     )
     @ConfigEditorBoolean
     @FeatureToggle
-    var display: Boolean = true
+    var display: Boolean = false
 
     @Expose
     @ConfigLink(owner = DragonConfig::class, field = "display")
@@ -36,7 +36,7 @@ class DragonConfig {
     )
     @ConfigEditorBoolean
     @FeatureToggle
-    var damageList: Boolean = true
+    var damageList: Boolean = false
 
     @Expose
     @ConfigLink(owner = DragonConfig::class, field = "damageList")
@@ -49,11 +49,11 @@ class DragonConfig {
     )
     @ConfigEditorBoolean
     @FeatureToggle
-    var dropAlert: Boolean = true
+    var dropAlert: Boolean = false
 
     @Expose
     @ConfigOption(name = "Weight Message", desc = "Shows your dragon weight in chat after the dragon died.")
     @ConfigEditorBoolean
     @FeatureToggle
-    var chat: Boolean = true
+    var chat: Boolean = false
 }

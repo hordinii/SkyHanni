@@ -10,20 +10,15 @@ import at.hannibal2.skyhanni.events.ItemAddEvent
 import at.hannibal2.skyhanni.events.minecraft.SkyHanniTickEvent
 import at.hannibal2.skyhanni.skyhannimodule.SkyHanniModule
 import at.hannibal2.skyhanni.utils.AllEntitiesGetter
-import at.hannibal2.skyhanni.utils.ChatUtils
 import at.hannibal2.skyhanni.utils.EntityUtils
 import at.hannibal2.skyhanni.utils.ItemUtils.getInternalNameOrNull
-import at.hannibal2.skyhanni.utils.LocationUtils.distanceToPlayer
 import at.hannibal2.skyhanni.utils.NeuInternalName
 import at.hannibal2.skyhanni.utils.NeuInternalName.Companion.toInternalName
-import at.hannibal2.skyhanni.utils.NumberUtil.roundTo
 import at.hannibal2.skyhanni.utils.RegexUtils.matchMatcher
 import at.hannibal2.skyhanni.utils.SafeItemStack
 import at.hannibal2.skyhanni.utils.SimpleTimeMark
-import at.hannibal2.skyhanni.utils.StringUtils.removeColor
 import at.hannibal2.skyhanni.utils.compat.EntityCompat.getAllEquipment
 import at.hannibal2.skyhanni.utils.compat.formattedTextCompatLessResets
-import at.hannibal2.skyhanni.utils.getLorenzVec
 import at.hannibal2.skyhanni.utils.repopatterns.RepoPattern
 import net.minecraft.world.entity.decoration.ArmorStand
 import java.util.UUID
@@ -74,9 +69,6 @@ object EndLootScanner {
     private val activeWindows = mutableMapOf<EndBoss, SimpleTimeMark>()
 
     private val seenDrops = mutableSetOf<UUID>()
-
-    /** Crit and damage markers Hypixel wraps its damage numbers in. */
-    private val DAMAGE_MARKERS = listOf("✧", "✯", "✦", "❁")
 
     /**
      * Opened on the death message rather than on the fight summary: the loot is already lying
@@ -131,21 +123,11 @@ object EndLootScanner {
 
             val internalName = fromStack
                 ?: label?.let { resolvePet(it) ?: NeuInternalName.fromItemNameOrNull(it) }
-            if (internalName == null) {
-                if (label != null && !isDecoration(label)) {
-                    ChatUtils.consoleLog("[EndLootScanner] unresolved label: '$label'")
-                }
-                continue
-            }
+            if (internalName == null) continue
 
             val amount = carried?.count?.takeIf { it > 1 }
                 ?: label?.split("§8x")?.last()?.toIntOrNull()
                 ?: 1
-            val source = if (fromStack != null) "stack" else "label"
-            val distance = entity.getLorenzVec().distanceToPlayer().roundTo(1)
-            ChatUtils.consoleLog(
-                "[EndLootScanner] $boss drop via $source: $internalName x$amount at ${distance}m",
-            )
             EndLootFoundEvent(boss, internalName, amount).post()
         }
     }
@@ -160,27 +142,12 @@ object EndLootScanner {
     @HandleEvent(onlyOnIsland = IslandType.THE_END)
     private fun onItemAdd(event: ItemAddEvent) {
         val boss = mostRecentBoss() ?: return
-        ChatUtils.consoleLog(
-            "[EndLootScanner] item added: ${event.internalName} x${event.amount} via ${event.source} ($boss)",
-        )
         EndLootFoundEvent(boss, event.internalName, event.amount).post()
     }
 
     /** First item the stand carries in any of its slots, ignoring empty ones. */
     private fun ArmorStand.carriedLoot(): SafeItemStack? = getAllEquipment()
         .firstOrNull { it != null && it.getInternalNameOrNull().let { name -> name != null && name != NeuInternalName.NONE } }
-
-    /**
-     * Mob nameplates, damage numbers and NPC signs are armor stands as well and vastly
-     * outnumber the loot. Recognising them keeps the log readable.
-     */
-    private fun isDecoration(label: String): Boolean {
-        // Damage numbers come with a crit marker that varies by hit type.
-        val clean = label.removeColor()
-        return clean.startsWith("[Lv") || clean.contains("❤") ||
-            DAMAGE_MARKERS.any { clean.contains(it) } ||
-            clean.all { it.isDigit() || it in ",." }
-    }
 
     /** Legendary is gold, epic is dark purple - see [petPattern]. */
     private fun resolvePet(label: String): NeuInternalName? = petPattern.matchMatcher(label) {

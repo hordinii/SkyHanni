@@ -3,7 +3,7 @@
 package at.hannibal2.skyhanni.utils.render.layers
 
 //? if < 26.2 {
-import at.hannibal2.skyhanni.mixins.hooks.GuiRendererHook
+/*import at.hannibal2.skyhanni.mixins.hooks.GuiRendererHook
 import at.hannibal2.skyhanni.utils.compat.RenderCompat.createRenderPass
 import at.hannibal2.skyhanni.utils.compat.RenderCompat.drawIndexed
 import at.hannibal2.skyhanni.utils.compat.RenderCompat.enableRenderPassScissorStateIfAble
@@ -102,4 +102,4 @@ class ChromaRenderLayer(
     }
 
 }
-//?}
+*///?}

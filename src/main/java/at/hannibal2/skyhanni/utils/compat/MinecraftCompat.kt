@@ -13,10 +13,10 @@ import net.minecraft.network.protocol.game.ClientboundSetTimePacket
 import net.minecraft.world.entity.Entity
 
 //? if >= 26.2 {
-/*import net.minecraft.client.gui.Hud
-*///?} else {
-import net.minecraft.client.gui.Gui
-//?}
+import net.minecraft.client.gui.Hud
+//?} else {
+/*import net.minecraft.client.gui.Gui
+*///?}
 
 /**
  * This is a compatibility layer that helps with multiple Minecraft versions and mixins.
@@ -109,23 +109,23 @@ object MinecraftCompat {
     @JvmStatic
     var screen: Screen?
         //~ if < 26.2 'gui.screen()' -> 'screen'
-        get() = mc.screen
+        get() = mc.gui.screen()
         set(value) {
             //~ if < 26.2 'gui.setScreen' -> 'setScreen'
-            mc.setScreen(value)
+            mc.gui.setScreen(value)
         }
 
     //~ if < 26.2 'Hud = mc.gui.hud' -> 'Gui = mc.gui'
-    val hud get(): Gui = mc.gui
+    val hud get(): Hud = mc.gui.hud
 
     //~ if < 26.2 'hud.isHidden()' -> 'mc.options.hideGui'
-    val hideGui get(): Boolean = mc.options.hideGui
+    val hideGui get(): Boolean = hud.isHidden()
 
     val showDebugHud get(): Boolean = mc.debugEntries.isOverlayVisible
 
     fun reloadChunks() = DelayedRun.runOrNextTick {
         //~ if < 26.2 'levelExtractor' -> 'levelRenderer'
-        mc.levelRenderer.allChanged()
+        mc.levelExtractor.allChanged()
     }
     // </editor-fold>
 }

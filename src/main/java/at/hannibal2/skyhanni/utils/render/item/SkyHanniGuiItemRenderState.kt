@@ -19,10 +19,10 @@ import net.minecraft.world.phys.Vec3
 import org.joml.Matrix3x2f
 
 //? if >= 26.2 {
-/*import net.minecraft.client.renderer.SubmitNodeStorage
-*///?} else {
-import net.minecraft.client.renderer.MultiBufferSource
-//?}
+import net.minecraft.client.renderer.SubmitNodeStorage
+//?} else {
+/*import net.minecraft.client.renderer.MultiBufferSource
+*///?}
 
 data class SkyHanniGuiItemRenderState(
     val itemStack: SafeItemStack,
@@ -96,7 +96,7 @@ data class SkyHanniGuiItemRenderState(
 
     internal fun renderItemToTexture(
         //~ if < 26.2 'submitNodeStorage: SubmitNodeStorage' -> 'bufferSource: MultiBufferSource.BufferSource'
-        bufferSource: MultiBufferSource.BufferSource,
+        submitNodeStorage: SubmitNodeStorage,
         featureRenderDispatcher: FeatureRenderDispatcher,
         centerX: Float,
         centerY: Float,
@@ -112,18 +112,18 @@ data class SkyHanniGuiItemRenderState(
         ps.translate(0.0f, 0.03f, 0.125f)
 
         //~ if < 26.2 'lighting()' -> 'lighting'
-        Minecraft.getInstance().gameRenderer.lighting.setupFor(
+        Minecraft.getInstance().gameRenderer.lighting().setupFor(
             if (trackingState.usesBlockLight()) Lighting.Entry.ITEMS_3D else Lighting.Entry.ITEMS_FLAT,
         )
         if (rotated) setAnimated()
 
         //~ if < 26.2 'submitNodeStorage' -> 'featureRenderDispatcher.submitNodeStorage'
-        trackingState.submit(ps, featureRenderDispatcher.submitNodeStorage, FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0)
+        trackingState.submit(ps, submitNodeStorage, FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0)
         //? if >= 26.2 {
-        /*featureRenderDispatcher.renderAllFeatures(submitNodeStorage)
-        *///?} else {
-        featureRenderDispatcher.renderAllFeatures()
+        featureRenderDispatcher.renderAllFeatures(submitNodeStorage)
+        //?} else {
+        /*featureRenderDispatcher.renderAllFeatures()
         bufferSource.endBatch()
-        //?}
+        *///?}
     }
 }

@@ -18,10 +18,10 @@ import net.minecraft.client.renderer.state.gui.GuiRenderState
 import kotlin.math.roundToInt
 
 //? if >= 26.2 {
-/*import net.minecraft.client.renderer.SubmitNodeStorage
-*///?} else {
-import net.minecraft.client.renderer.MultiBufferSource
-//?}
+import net.minecraft.client.renderer.SubmitNodeStorage
+//?} else {
+/*import net.minecraft.client.renderer.MultiBufferSource
+*///?}
 
 internal class SkyHanniItemAtlasRenderer(
     private val sizePixels: Int,
@@ -51,7 +51,7 @@ internal class SkyHanniItemAtlasRenderer(
         slotY: Int,
         pixelSize: Int,
         //~ if < 26.2 'submitNodeStorage: SubmitNodeStorage' -> 'bufferSource: MultiBufferSource.BufferSource'
-        bufferSource: MultiBufferSource.BufferSource,
+        submitNodeStorage: SubmitNodeStorage,
         featureRenderDispatcher: FeatureRenderDispatcher,
     ) {
         RenderSystem.enableScissorForRenderTypeDraws(
@@ -59,7 +59,7 @@ internal class SkyHanniItemAtlasRenderer(
         )
         shState.renderItemToTexture(
             //~ if < 26.2 'submitNodeStorage' -> 'bufferSource'
-            bufferSource, featureRenderDispatcher,
+            submitNodeStorage, featureRenderDispatcher,
             centerX = slotX.toFloat() + pixelSize / 2.0f,
             centerY = slotY.toFloat() + pixelSize / 2.0f,
             pixelSize = pixelSize,

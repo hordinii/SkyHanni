@@ -6,7 +6,6 @@ import at.hannibal2.skyhanni.data.model.TabWidget
 import at.hannibal2.skyhanni.events.IslandChangeEvent
 import at.hannibal2.skyhanni.events.WidgetUpdateEvent
 import at.hannibal2.skyhanni.skyhannimodule.SkyHanniModule
-import at.hannibal2.skyhanni.utils.ChatUtils
 import at.hannibal2.skyhanni.utils.RegexUtils.matchMatcher
 import at.hannibal2.skyhanni.utils.SimpleTimeMark
 import at.hannibal2.skyhanni.utils.repopatterns.RepoPattern
@@ -88,7 +87,6 @@ object GolemStage {
                 // Only the awakening stage is timed; every other stage clears the counter.
                 awakeningSince = if (newStage == Stage.AWAKENING) SimpleTimeMark.now() else null
             }
-            if (current == null) ChatUtils.consoleLog("[GolemStage] unknown protector stage: '$name'")
         }
     }
 

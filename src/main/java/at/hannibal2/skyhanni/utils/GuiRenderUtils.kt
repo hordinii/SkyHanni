@@ -333,7 +333,7 @@ object GuiRenderUtils {
             alpha = alpha,
         )
         //~ if < 26.2 'gameRenderState()' -> 'gameRenderState'
-        Minecraft.getInstance().gameRenderer.gameRenderState.guiRenderState.addPicturesInPictureState(newRenderState)
+        Minecraft.getInstance().gameRenderer.gameRenderState().guiRenderState.addPicturesInPictureState(newRenderState)
 
         return newRenderState.stableId
     }

@@ -98,11 +98,6 @@ object EndRareDropTracker {
         val petLuck = SkyblockStat.PET_LUCK.lastKnownValue ?: 0.0
         bothBonus = (magicFind + petLuck) / 100.0
         magicFindBonus = magicFind / 100.0
-        ChatUtils.consoleLog(
-            "[EndRareDropTracker] stats at ${event.boss} death: " +
-                "magicFind=$magicFind (source ${SkyblockStat.MAGIC_FIND.lastSource}), " +
-                "petLuck=$petLuck (source ${SkyblockStat.PET_LUCK.lastSource})",
-        )
     }
 
     /** Chance = BaseChance x (1 + (MagicFind + PetLuck) / 100). */
@@ -152,11 +147,9 @@ object EndRareDropTracker {
                 )
                 if (weight < DRAGON_WEIGHT_REQUIREMENT) return
                 data.dryDragons++
-                val eyes = DragonFightState.eyesPlaced
-                val base = eyes * (LEGENDARY_PET_CHANCE_PER_EYE + EPIC_PET_CHANCE_PER_EYE)
-                val added = withPetBonus(base)
-                data.dryDragonChance += added
-                logChance("dragon", eyes, base, added)
+                data.dryDragonChance += withPetBonus(
+                    DragonFightState.eyesPlaced * (LEGENDARY_PET_CHANCE_PER_EYE + EPIC_PET_CHANCE_PER_EYE),
+                )
             }
 
             // The protector is counted in onGolemWeight instead: its weight needs the zealot
@@ -168,14 +161,9 @@ object EndRareDropTracker {
     @HandleEvent
     private fun onGolemWeight(event: GolemWeightEvent) {
         val data = storage ?: return
-        if (event.weight < GOLEM_WEIGHT_REQUIREMENT) {
-            ChatUtils.consoleLog("[EndRareDropTracker] golem skipped: weight=${event.weight.roundTo(0)}")
-            return
-        }
+        if (event.weight < GOLEM_WEIGHT_REQUIREMENT) return
         data.dryGolems++
-        val added = withMagicFindBonus(TIER_BOOST_CHANCE)
-        data.dryGolemChance += added
-        logChance("golem", eyes = 0, base = TIER_BOOST_CHANCE, added = added)
+        data.dryGolemChance += withMagicFindBonus(TIER_BOOST_CHANCE)
     }
 
     @HandleEvent(onlyOnIsland = IslandType.THE_END)
@@ -198,13 +186,6 @@ object EndRareDropTracker {
             category = CommandCategory.USERS_ACTIVE
             simpleCallback { copySummary() }
         }
-
-        event.registerBrigadier("shresetenddrystreak") {
-            description = "Reset the dry streak counter for dragons or golems."
-            category = CommandCategory.USERS_RESET
-            literal("dragon") { simpleCallback { resetStreak(dragon = true) } }
-            literal("golem") { simpleCallback { resetStreak(dragon = false) } }
-        }
     }
 
     /**
@@ -220,30 +201,6 @@ object EndRareDropTracker {
             append("Since Golems: ${data.dryGolems} (${data.dryGolemChance.roundTo(2)}%)")
         }
         copyLine(text)
-    }
-
-    private fun resetStreak(dragon: Boolean) {
-        val data = storage ?: return
-        if (dragon) {
-            resetDragonStreak(data)
-            ChatUtils.chat("§eReset the dragon dry streak.")
-        } else {
-            data.dryGolems = 0
-            data.dryGolemChance = 0.0
-            ChatUtils.chat("§eReset the golem dry streak.")
-        }
-    }
-
-    /**
-     * Temporary diagnostic: prints every input of the chance calculation, so a number that looks
-     * off can be traced to the value that produced it instead of being guessed at.
-     */
-    private fun logChance(kind: String, eyes: Int, base: Double, added: Double) {
-        ChatUtils.consoleLog(
-            "[EndRareDropTracker] $kind: eyes=$eyes base=${base.roundTo(4)}% " +
-                "mf=${(magicFindBonus * 100).roundTo(1)} both=${(bothBonus * 100).roundTo(1)} " +
-                "added=${added.roundTo(4)}%",
-        )
     }
 
     /** Each boss forms its own block, so switching one off simply shrinks the overlay. */

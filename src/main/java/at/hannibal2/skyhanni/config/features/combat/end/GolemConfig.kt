@@ -17,7 +17,7 @@ class GolemConfig {
     )
     @ConfigEditorBoolean
     @FeatureToggle
-    var weightChat: Boolean = true
+    var weightChat: Boolean = false
 
     @Expose
     @ConfigOption(
@@ -26,7 +26,7 @@ class GolemConfig {
     )
     @ConfigEditorBoolean
     @FeatureToggle
-    var dropAlert: Boolean = true
+    var dropAlert: Boolean = false
 
     @Expose
     @ConfigOption(
@@ -35,7 +35,7 @@ class GolemConfig {
     )
     @ConfigEditorBoolean
     @FeatureToggle
-    var display: Boolean = true
+    var display: Boolean = false
 
     @Expose
     @ConfigLink(owner = GolemConfig::class, field = "display")
@@ -67,7 +67,7 @@ class GolemConfig {
     )
     @ConfigEditorBoolean
     @FeatureToggle
-    var highlightSpawnPoints: Boolean = true
+    var highlightSpawnPoints: Boolean = false
 
     @Expose
     @ConfigOption(name = "Spawn Point Color", desc = "Color of the marked spawn point.")

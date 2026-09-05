@@ -15,7 +15,7 @@ class RareDropTrackerConfig {
     )
     @ConfigEditorBoolean
     @FeatureToggle
-    var enabled: Boolean = true
+    var enabled: Boolean = false
 
     @Expose
     @ConfigLink(owner = RareDropTrackerConfig::class, field = "enabled")

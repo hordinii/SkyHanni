@@ -31,13 +31,13 @@ object GolemDisplay {
 
     private val config get() = SkyHanniMod.feature.combat.endIsland.golem
 
-    /** Breathing room between the info lines. */
+
     private const val LINE_SPACING = 3
 
     private const val LABEL_COLOR = 0xAAAAAA
     private const val UNKNOWN_COLOR = 0xFFFFFF
 
-    /** Sandstone tan, matching the protector the card is about. */
+
     private const val TITLE_COLOR = 0xE3D5A0
 
     private const val TITLE_ICON_SPACING = 4
@@ -55,10 +55,7 @@ object GolemDisplay {
         )
     }
 
-    /**
-     * The protector's own head, taken from the repo item rather than read off the head block in
-     * the world - that only worked once a spawn point had been seen and rendered wrong until then.
-     */
+
     private fun buildTitle(): Renderable {
         val text = Renderable.text(
             componentBuilder {

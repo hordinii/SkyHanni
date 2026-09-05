@@ -23,8 +23,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Map;
 
 //? if < 26.2 {
-import net.minecraft.client.renderer.MultiBufferSource;
-//?}
+/*import net.minecraft.client.renderer.MultiBufferSource;
+*///?}
 
 @Mixin(GuiRenderer.class)
 public abstract class MixinGuiRenderer {
@@ -36,7 +36,7 @@ public abstract class MixinGuiRenderer {
     }
 
     //~ if < 26.2 'shift = At.Shift.AFTER' -> 'ordinal = 1'
-    @Inject(method = "executeDrawRange", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setUniform(Ljava/lang/String;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V", ordinal = 1))
+    @Inject(method = "executeDrawRange", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setUniform(Ljava/lang/String;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V", shift = At.Shift.AFTER))
     public void insertChromaSetUniform(
         CallbackInfo ci,
         @Local RenderPass renderPass) {
@@ -60,7 +60,7 @@ public abstract class MixinGuiRenderer {
     }
 
     //? if < 26.2 {
-    @Shadow
+    /*@Shadow
     @Final
     private MultiBufferSource.BufferSource bufferSource;
 
@@ -68,7 +68,7 @@ public abstract class MixinGuiRenderer {
     public MultiBufferSource.BufferSource getBufferSource() {
         return bufferSource;
     }
-    //?}
+    *///?}
 
     @Shadow
     @Final
@@ -90,7 +90,7 @@ public abstract class MixinGuiRenderer {
         GuiRendererHook.INSTANCE.preRenderAtlas(
             pictureInPictureRenderers,
             //? if < 26.2
-            getBufferSource(),
+            //getBufferSource(),
             featureRenderDispatcher,
             skyhanni$frameNumber
         );

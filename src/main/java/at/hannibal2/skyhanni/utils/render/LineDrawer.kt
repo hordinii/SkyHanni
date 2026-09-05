@@ -8,10 +8,10 @@ import net.minecraft.world.phys.AABB
 import java.awt.Color
 
 //? if >= 26.2 {
-/*import net.minecraft.client.renderer.gizmos.DrawableGizmoPrimitives
-*///?} else {
-import at.hannibal2.skyhanni.utils.render.WorldRenderUtils.submitCustomGeometry
-//?}
+import net.minecraft.client.renderer.gizmos.DrawableGizmoPrimitives
+//?} else {
+/*import at.hannibal2.skyhanni.utils.render.WorldRenderUtils.submitCustomGeometry
+*///?}
 
 class LineDrawer @PublishedApi internal constructor(val event: SkyHanniRenderWorldEvent, val lineWidth: Int, val depth: Boolean) {
 
@@ -22,13 +22,13 @@ class LineDrawer @PublishedApi internal constructor(val event: SkyHanniRenderWor
         if (queuedLines.isEmpty()) return
 
         //? if >= 26.2 {
-        /*val gizmos = DrawableGizmoPrimitives()
+        val gizmos = DrawableGizmoPrimitives()
         for (line in queuedLines) {
             gizmos.addLine(line.p1.toVec3(), line.p2.toVec3(), line.color.rgb, lineWidth.toFloat())
         }
         gizmos.submit(event.submitNodeStorage, event.camera, !depth)
-        *///?} else {
-        val layer = SkyHanniRenderLayers.getLines(!depth)
+        //?} else {
+        /*val layer = SkyHanniRenderLayers.getLines(!depth)
         event.submitCustomGeometry(layer) { buf ->
             val matrix = event.matrices.last()
 
@@ -45,7 +45,7 @@ class LineDrawer @PublishedApi internal constructor(val event: SkyHanniRenderWor
                     .setLineWidth(lineWidth.toFloat())
             }
         }
-        //?}
+        *///?}
 
         queuedLines.clear()
     }

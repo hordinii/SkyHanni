@@ -1,7 +1,7 @@
 package at.hannibal2.skyhanni.mixins.transformers;
 
 //? if >= 26.2 {
-/*import at.hannibal2.skyhanni.mixins.hooks.GuiRendererHook;
+import at.hannibal2.skyhanni.mixins.hooks.GuiRendererHook;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,4 +17,4 @@ public abstract class MixinGameRenderer262 {
         GuiRendererHook.clearChromaUniforms();
     }
 }
-*///?}
+//?}

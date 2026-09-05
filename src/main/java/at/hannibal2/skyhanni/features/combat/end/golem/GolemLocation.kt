@@ -10,10 +10,8 @@ import at.hannibal2.skyhanni.events.minecraft.SkyHanniRenderWorldEvent
 import at.hannibal2.skyhanni.skyhannimodule.SkyHanniModule
 import at.hannibal2.skyhanni.utils.BlockUtils.getBlockAt
 import at.hannibal2.skyhanni.utils.BlockUtils.isInLoadedChunk
-import at.hannibal2.skyhanni.utils.ChatUtils
 import at.hannibal2.skyhanni.utils.ColorUtils.toColor
 import at.hannibal2.skyhanni.utils.LorenzVec
-import at.hannibal2.skyhanni.utils.NumberUtil.roundTo
 import at.hannibal2.skyhanni.utils.getLorenzVec
 import at.hannibal2.skyhanni.utils.render.WorldRenderUtils.drawColor
 import at.hannibal2.skyhanni.utils.render.WorldRenderUtils.drawString
@@ -93,13 +91,6 @@ object GolemLocation {
         val position = mob.baseEntity.getLorenzVec()
         activePoint = spawnPoints.minByOrNull { it.spawn.distance(position) }
             ?.takeIf { it.spawn.distance(position) <= MATCH_RADIUS }
-
-        if (activePoint == null) {
-            ChatUtils.consoleLog(
-                "[GolemLocation] golem spawned away from every known point: " +
-                    "x=${position.x.roundTo(1)} y=${position.y.roundTo(1)} z=${position.z.roundTo(1)}",
-            )
-        }
     }
 
     @HandleEvent(onlyOnIsland = IslandType.THE_END)

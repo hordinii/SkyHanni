@@ -21,10 +21,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 //? if >= 26.2 {
-/*import net.minecraft.client.renderer.SubmitNodeStorage;
+import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
-*///?} else {
-import at.hannibal2.skyhanni.utils.render.WorldRenderUtils;
+//?} else {
+/*import at.hannibal2.skyhanni.utils.render.WorldRenderUtils;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -37,7 +37,7 @@ import net.minecraft.client.renderer.chunk.ChunkSectionsToRender;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.injection.Slice;
-//?}
+*///?}
 
 // Adapted from Fabric API implementation
 // The Fabric API event makes our lines render strange
@@ -45,9 +45,9 @@ import org.spongepowered.asm.mixin.injection.Slice;
 public abstract class MixinLevelRenderer {
 
     //? if < 26.2 {
-    @Unique
+    /*@Unique
     PoseStack contextMatrixStack;
-    //?}
+    *///?}
 
     @Unique
     CameraRenderState currentCameraState;
@@ -56,17 +56,17 @@ public abstract class MixinLevelRenderer {
     DeltaTracker currentTickCounter;
 
     //? if >= 26.2 {
-    /*@Final
-    @Shadow
-    private SubmitNodeStorage submitNodeStorage;
-    *///?} else {
     @Final
     @Shadow
+    private SubmitNodeStorage submitNodeStorage;
+    //?} else {
+    /*@Final
+    @Shadow
     private RenderBuffers renderBuffers;
-    //?}
+    *///?}
 
     //~ if < 26.2 'render' -> 'renderLevel'
-    @Inject(method = "renderLevel", at = @At("HEAD"))
+    @Inject(method = "render", at = @At("HEAD"))
     private void beginRender(
         GraphicsResourceAllocator resourceAllocator,
         DeltaTracker deltaTracker, boolean renderOutline,
@@ -76,7 +76,7 @@ public abstract class MixinLevelRenderer {
         Vector4f fogColor,
         boolean shouldRenderSky,
         //? if < 26.2
-        ChunkSectionsToRender chunkSectionsToRender,
+        //ChunkSectionsToRender chunkSectionsToRender,
         CallbackInfo ci
     ) {
         currentCameraState = cameraState;
@@ -84,7 +84,7 @@ public abstract class MixinLevelRenderer {
     }
 
     //? if >= 26.2 {
-    /*@Inject(
+    @Inject(
         method = "render",
         at = @At(
             value = "INVOKE",
@@ -111,8 +111,8 @@ public abstract class MixinLevelRenderer {
         );
         event.post();
     }
-    *///?} else {
-    @WrapOperation(
+    //?} else {
+    /*@WrapOperation(
         method = "lambda$addMainPass$0",
         slice = @Slice(from = @At(value = "INVOKE_STRING", target = "Lnet/minecraft/util/profiling/ProfilerFiller;push(Ljava/lang/String;)V", args = "ldc=translucent")),
         at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/chunk/ChunkSectionsToRender;renderGroup(Lnet/minecraft/client/renderer/chunk/ChunkSectionLayerGroup;Lcom/mojang/blaze3d/textures/GpuSampler;)V", ordinal = 0)
@@ -143,17 +143,17 @@ public abstract class MixinLevelRenderer {
         Integer glowColor = RenderLivingEntityHelper.getEntityGlowColor(entity);
         return glowColor != null || original.call(instance);
     }
-    //?}
+    *///?}
 
     //~ if < 26.2 ';Lorg/joml/Vector4fc;' -> ';I'
-    @Inject(method = "lambda$addMainPass$0", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/CommandEncoder;clearColorAndDepthTextures(Lcom/mojang/blaze3d/textures/GpuTexture;ILcom/mojang/blaze3d/textures/GpuTexture;D)V", ordinal = 0, shift = At.Shift.AFTER))
+    @Inject(method = "lambda$addMainPass$0", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/CommandEncoder;clearColorAndDepthTextures(Lcom/mojang/blaze3d/textures/GpuTexture;Lorg/joml/Vector4fc;Lcom/mojang/blaze3d/textures/GpuTexture;D)V", ordinal = 0, shift = At.Shift.AFTER))
     private void setGlowDepth(CallbackInfo ci) {
         if (!RenderLivingEntityHelper.isUsingCustomGlow()) return;
         SkyHanniOutlineHook.checkIfDepthAttachmentNeedsUpdating();
     }
 
     //? if < 26.2 {
-    @Inject(method = "lambda$addMainPass$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/OutlineBufferSource;endOutlineBatch()V"))
+    /*@Inject(method = "lambda$addMainPass$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/OutlineBufferSource;endOutlineBatch()V"))
     private void renderSkyhanniGlow(CallbackInfo ci) {
         if (!RenderLivingEntityHelper.isUsingCustomGlow()) return;
         SkyHanniOutlineHook.getVertexConsumers().endOutlineBatch();
@@ -170,5 +170,5 @@ public abstract class MixinLevelRenderer {
     private void renderDeferredSeeThroughText(CallbackInfo ci, @Local MultiBufferSource.BufferSource bufferSource) {
         WorldRenderUtils.renderDeferredSeeThroughText(bufferSource);
     }
-    //?}
+    *///?}
 }

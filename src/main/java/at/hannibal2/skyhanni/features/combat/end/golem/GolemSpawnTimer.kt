@@ -4,12 +4,9 @@ import at.hannibal2.skyhanni.api.event.HandleEvent
 import at.hannibal2.skyhanni.data.IslandType
 import at.hannibal2.skyhanni.data.MinecraftData
 import at.hannibal2.skyhanni.events.IslandChangeEvent
-import at.hannibal2.skyhanni.events.SecondPassedEvent
 import at.hannibal2.skyhanni.events.chat.SkyHanniChatEvent
 import at.hannibal2.skyhanni.skyhannimodule.SkyHanniModule
-import at.hannibal2.skyhanni.utils.ChatUtils
 import at.hannibal2.skyhanni.utils.RegexUtils.matches
-import at.hannibal2.skyhanni.utils.SimpleTimeMark
 import at.hannibal2.skyhanni.utils.repopatterns.RepoPattern
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -46,33 +43,6 @@ object GolemSpawnTimer {
     private var spawnTick: Int? = null
 
     /**
-     * Temporary diagnostic: when the countdown reached zero, so it can be compared against the
-     * moment the protector actually announces itself. The difference tells whether
-     * [SPAWN_DELAY_TICKS] is right.
-     */
-    private var reachedZeroAt: SimpleTimeMark? = null
-    private var startedAt: SimpleTimeMark? = null
-
-    /**
-     * The moment the protector is actually there, used to check the countdown against reality.
-     *
-     * REGEX-TEST: §c§lBEWARE - An Endstone Protector has risen!
-     */
-    private val risenPattern by repoGroup.pattern(
-        "chat.risen",
-        "(?i).*BEWARE.*An End ?stone Protector has risen!.*",
-    )
-
-    @HandleEvent(onlyOnIsland = IslandType.THE_END)
-    private fun onSecondPassed(event: SecondPassedEvent) {
-        if (spawnTick == null || reachedZeroAt != null) return
-        if (timeUntilSpawn() > 0.seconds) return
-        reachedZeroAt = SimpleTimeMark.now()
-        val elapsed = startedAt?.passedSince()
-        ChatUtils.consoleLog("[GolemSpawnTimer] countdown reached zero after $elapsed")
-    }
-
-    /**
      * Remaining time until the golem can be attacked, zero once it has spawned.
      *
      * Scaling this by the measured tick rate was tried and removed: a changing rate moved the
@@ -91,19 +61,6 @@ object GolemSpawnTimer {
         val message = event.message
         if (risingPattern.matches(message)) {
             spawnTick = MinecraftData.totalServerTicks + SPAWN_DELAY_TICKS
-            startedAt = SimpleTimeMark.now()
-            reachedZeroAt = null
-            ChatUtils.consoleLog("[GolemSpawnTimer] rising message - countdown started")
-            return
-        }
-
-        if (risenPattern.matches(message)) {
-            val sinceStart = startedAt?.passedSince()
-            val offset = reachedZeroAt?.passedSince()
-            ChatUtils.consoleLog(
-                "[GolemSpawnTimer] risen message after $sinceStart" +
-                    (offset?.let { ", countdown hit zero $it earlier" } ?: ", countdown had not reached zero yet"),
-            )
             return
         }
     }
@@ -111,7 +68,5 @@ object GolemSpawnTimer {
     @HandleEvent
     private fun onIslandChange(event: IslandChangeEvent) {
         spawnTick = null
-        startedAt = null
-        reachedZeroAt = null
     }
 }

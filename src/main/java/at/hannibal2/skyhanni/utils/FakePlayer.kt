@@ -14,10 +14,10 @@ class FakePlayer(val player: AbstractClientPlayer) : ClientMannequin(
     Minecraft.getInstance().playerSkinRenderCache(),
 ) {
     //? if >= 26.2 {
-    /*init {
+    init {
         id = FakeEntityIdProvider.getNextId()
     }
-    *///?}
+    //?}
 
     override fun getSkin(): PlayerSkin = player.skin
 

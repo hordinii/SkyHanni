@@ -89,11 +89,6 @@ object GolemWeight {
         zealotsPattern.matchMatcher(event.message) {
             val zealots = group("amount").toInt()
             weight = calculateWeight(zealots, result.place, result.topDamage, result.yourDamage)
-            ChatUtils.consoleLog(
-                "[GolemWeight] zealots=$zealots place=${result.place} " +
-                    "yourDamage=${result.yourDamage} topDamage=${result.topDamage} " +
-                    "weight=${weight.roundTo(1)}",
-            )
             if (config.weightChat) {
                 ChatUtils.chat(
                     "§f${" ".repeat(30)}§r§eYour Weight: §r§a${weight.roundTo(0).addSeparators()}",

@@ -19,8 +19,8 @@ public abstract class MixinRenderPipeline {
         if (!SkyHanniOutlineHook.isCurrentlyActive()) return original;
         //~ if < 26.2 'GREATER_THAN_OR_EQUAL' -> 'LESS_THAN_OR_EQUAL' {
         return original != null
-            ? new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, original.writeDepth(), original.depthBiasScaleFactor(), original.depthBiasConstant())
-            : new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, true);
+            ? new DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, original.writeDepth(), original.depthBiasScaleFactor(), original.depthBiasConstant())
+            : new DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, true);
         //~}
     }
 }
