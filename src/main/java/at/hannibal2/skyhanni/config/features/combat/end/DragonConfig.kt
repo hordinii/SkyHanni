@@ -15,6 +15,12 @@ class DragonConfig {
     val dragonProfitTracker: DragonProfitTrackerConfig = DragonProfitTrackerConfig()
 
     @Expose
+    @ConfigOption(name = "Superior Notification", desc = "Show a title when a Superior Dragon spawns.")
+    @ConfigEditorBoolean
+    @FeatureToggle
+    var superiorNotify: Boolean = true
+
+    @Expose
     @ConfigOption(
         name = "Damage List HUD",
         desc = "Shows a list of all damage sources and their damage during the dragon fight." +
@@ -42,4 +48,10 @@ class DragonConfig {
     @ConfigEditorBoolean
     @FeatureToggle
     var chat: Boolean = false
+
+    @Expose
+    @ConfigOption(name = "Skyhanni Prefix", desc = "Displays the Skyhanni prefix in the dragon weight message.")
+    @ConfigEditorBoolean
+    @FeatureToggle
+    var skyhanniMessagePrefix: Boolean = true
 }

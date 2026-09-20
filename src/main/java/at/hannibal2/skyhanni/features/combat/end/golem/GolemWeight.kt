@@ -19,7 +19,7 @@ import kotlin.time.Duration.Companion.seconds
 
 /**
  * Calculates the weight for a finished End Stone Protector fight. The shared part of the
- * end-of-fight summary is parsed by [at.hannibal2.skyhanni.features.combat.end.dragon.DragonFightAPI];
+ * end-of-fight summary is parsed by [at.hannibal2.skyhanni.features.combat.end.dragon.DragonFightApi];
  * only the golem specific zealot line is read here.
  */
 @SkyHanniModule

@@ -6,6 +6,7 @@ import at.hannibal2.skyhanni.data.model.TabWidget
 import at.hannibal2.skyhanni.events.EndBoss
 import at.hannibal2.skyhanni.events.EndBossDeathEvent
 import at.hannibal2.skyhanni.events.EndBossFightEndEvent
+import at.hannibal2.skyhanni.events.EndBossSpawnEvent
 import at.hannibal2.skyhanni.events.ScoreboardUpdateEvent
 import at.hannibal2.skyhanni.events.WidgetUpdateEvent
 import at.hannibal2.skyhanni.events.chat.SkyHanniChatEvent
@@ -26,11 +27,15 @@ import at.hannibal2.skyhanni.utils.repopatterns.RepoPattern
  * Features only consume this and never parse anything themselves.
  */
 @SkyHanniModule
-object DragonFightAPI {
+object DragonFightApi {
 
-    private val dragonNames = DragonType.entries
-        .filter { it != DragonType.UNKNOWN }
-        .joinToString("|") { it.name.firstLetterUppercase() }
+    private val dragonTypes = DragonType.entries.filter { it != DragonType.UNKNOWN }
+
+    /** "Old|Unstable|..." for the spawn message, which names the dragon in title case. */
+    private val dragonNames = dragonTypes.joinToString("|") { it.name.firstLetterUppercase() }
+
+    /** "OLD|UNSTABLE|..." for the death message, which shouts it. */
+    private val dragonNamesUppercase = dragonTypes.joinToString("|") { it.name }
 
     // Keys that beta already uses for the older coloured patterns carry a .colorless suffix. Their
     // regex changed, and an older client picking up the new one under the old key would break.
@@ -73,7 +78,7 @@ object DragonFightAPI {
      */
     private val dragonDownPattern by endGroup.pattern(
         "down.dragon",
-        "\\s+(?:PROTECTOR|OLD|UNSTABLE|YOUNG|STRONG|WISE|SUPERIOR) DRAGON DOWN!",
+        "\\s+(?:$dragonNamesUppercase) DRAGON DOWN!",
     )
 
     /**
@@ -172,6 +177,7 @@ object DragonFightAPI {
                     val type = DragonType.getByName(group("dragon").uppercase())
                     currentType = type.displayName
                     DragonFightState.onDragonSpawn(type)
+                    EndBossSpawnEvent(EndBoss.DRAGON).post()
                     return
                 }
                 handleFightEnd(message)

@@ -1,8 +1,7 @@
 package at.hannibal2.skyhanni.features.combat.end.dragon
 
-
 /**
- * Plain state of the current dragon fight. Everything here is written by [DragonFightAPI] and
+ * Plain state of the current dragon fight. Everything here is written by [DragonFightApi] and
  * only read by the features - it holds no patterns and does no parsing of its own.
  */
 object DragonFightState {

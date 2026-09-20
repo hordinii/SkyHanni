@@ -17,7 +17,7 @@ import at.hannibal2.skyhanni.utils.renderables.primitives.text
 
 /**
  * Renders the per-player damage leaderboard of the running dragon fight, read from
- * [DragonFightAPI].
+ * [DragonFightApi].
  */
 @SkyHanniModule
 object DragonDamageDisplay {
@@ -32,13 +32,13 @@ object DragonDamageDisplay {
     private val waitingMessage = listOf(Renderable.text("§7Waiting for fight data..."))
 
     /** Entries the overlay was last built from - it is only rebuilt once they change. */
-    private var shownEntries: List<DragonFightAPI.DamageEntry>? = null
+    private var shownEntries: List<DragonFightApi.DamageEntry>? = null
     private var display: Renderable? = null
 
     @HandleEvent(onlyOnIsland = IslandType.THE_END)
     private fun onTick() {
         if (!config.damageList) return
-        val entries = DragonFightAPI.damageEntries
+        val entries = DragonFightApi.damageEntries
         if (entries == shownEntries) return
         shownEntries = entries
         display = Renderable.vertical(buildLines(entries), spacing = LINE_SPACING).withTitledFrame(buildTitle())
@@ -58,7 +58,7 @@ object DragonDamageDisplay {
         },
     )
 
-    private fun buildLines(entries: List<DragonFightAPI.DamageEntry>): List<Renderable> {
+    private fun buildLines(entries: List<DragonFightApi.DamageEntry>): List<Renderable> {
         if (entries.isEmpty()) return waitingMessage
 
         val ownName = PlayerUtils.getName()

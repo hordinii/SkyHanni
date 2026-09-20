@@ -109,17 +109,17 @@ object DragonProfitTracker : SkyHanniBucketedItemTracker<DragonType, DragonProfi
 
     @HandleEvent
     fun onItemAdd(event: ItemAddEvent) {
-        if (!DragonFightAPI.inNestArea() || event.source != ItemAddManager.Source.COMMAND) return
+        if (!DragonFightApi.inNestArea() || event.source != ItemAddManager.Source.COMMAND) return
         event.addItemFromEvent()
         ChatUtils.debug("Added item to tracker: ${event.internalName} (amount: ${event.amount})")
     }
 
     init {
-        initRenderer({ config.position }) { config.enabled && DragonFightAPI.inNestArea() }
+        initRenderer({ config.position }) { config.enabled && DragonFightApi.inNestArea() }
     }
 
     /**
-     * Books the finished dragon once [DragonFightAPI] has read the fight summary. Lives here
+     * Books the finished dragon once [DragonFightApi] has read the fight summary. Lives here
      * rather than in the fight state, so the tracker owns everything it needs to record.
      */
     @HandleEvent

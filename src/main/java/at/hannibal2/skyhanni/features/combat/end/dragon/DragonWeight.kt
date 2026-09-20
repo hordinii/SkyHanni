@@ -11,7 +11,7 @@ import at.hannibal2.skyhanni.utils.NumberUtil.roundTo
 
 /**
  * Dragon weight of a finished fight: printed to chat when the dragon dies and read by
- * [DragonLootDetection]. All input data comes from [DragonFightAPI] and [DragonFightState].
+ * [DragonLootDetection]. All input data comes from [DragonFightApi] and [DragonFightState].
  */
 @SkyHanniModule
 object DragonWeight {
@@ -45,10 +45,12 @@ object DragonWeight {
         if (event.boss != EndBoss.DRAGON) return
         weight = calculateWeight(DragonFightState.eyesPlaced, event.place, event.topDamage, event.yourDamage)
         if (!config.chat) return
-        // Sent without the SkyHanni prefix so it blends into Hypixel's centered fight summary.
+        // Without the prefix the line sits where Hypixel's own centered summary does; with it, the
+        // indent shrinks by the width of the prefix so the text still lines up.
+        val indent = if (config.skyhanniMessagePrefix) 16 else 30
         ChatUtils.chat(
-            "§f${" ".repeat(30)}§r§eYour Weight: §r§a${weight.roundTo(0).addSeparators()}",
-            prefix = false,
+            "§f${" ".repeat(indent)}§r§eYour Weight: §r§a${weight.roundTo(0).addSeparators()}",
+            prefix = config.skyhanniMessagePrefix,
         )
     }
 }

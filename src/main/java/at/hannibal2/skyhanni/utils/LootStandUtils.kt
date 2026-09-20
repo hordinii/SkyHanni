@@ -62,18 +62,29 @@ object LootStandUtils {
      * label. That covers every other armor stand in the world, and a loot stand whose second packet
      * has not arrived yet - so a stand is worth asking again on its next update.
      *
-     * The item stack is preferred over the label, because it names its item exactly, including a
-     * pet's rarity, without any text parsing. The label still matters: at a distance the item may
-     * never arrive, and stacked drops carry their amount there.
+     * The item stack names its item exactly and is used wherever it can be. Pets are the exception:
+     * every rarity of a pet shares one skull, so resolving the stack names the pet but guesses the
+     * rarity. That one is only ever a colour, and it is read from the item's own name - which comes
+     * with the equipment packet, far further out than the label above the drop.
      */
     fun ArmorStand.readLoot(): StandLoot? {
         val carried = carriedItem()
         val fromStack = carried?.getInternalNameOrNull()?.takeIf { it != NeuInternalName.NONE }
         val label = if (hasCustomName()) name.formattedTextCompatLessResets() else null
 
-        val internalName = fromStack
-            ?: label?.let { resolvePet(it) ?: NeuInternalName.fromItemNameOrNull(it) }
-            ?: return null
+        // The item's own name first, the label above the drop second: both carry the rarity as a
+        // colour, but the item arrives with its packet while the label needs the player to be near.
+        val pet = carried?.let { resolvePet(it.hoverName.formattedTextCompatLessResets()) }
+            ?: label?.let { resolvePet(it) }
+
+        val internalName = when {
+            pet != null -> pet
+            // Neither name has arrived, and resolving the stack alone would guess the rarity.
+            // Waiting costs nothing: the stand is read again with its next packet.
+            fromStack?.isPet == true -> return null
+            fromStack != null -> fromStack
+            else -> label?.let { NeuInternalName.fromItemNameOrNull(it) } ?: return null
+        }
 
         val amount = carried?.count?.takeIf { it > 1 }
             ?: label?.let { amountPattern.matchMatcher(it) { group("amount").formatIntOrNull() } }
